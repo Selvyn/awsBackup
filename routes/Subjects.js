@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Subject = require('../models/Subject');
-//var Task = require('../models/Task');
+var Task = require('../models/Task');
 var bodyParser = require('body-parser');
 router.use(bodyParser.urlencoded({
   extended: true
@@ -97,21 +97,44 @@ router.post('/updateSubjectName', function(req, res, next){
 router.post('/addSubject',function(req,res,next){
     Subject.addSubject(req.body,function(err,rows){
         if(err){
-            res.send("failed");
+            res.send(err);
         }
         else{
-             Subject.getSubjectsAndAssignmentByUserId(req.body.user_id, function(err, rows){
+	  
+		Subject.getSubjectsByUserId(req.body.name, function(err,data){
+		if(err)
+			{
+				res.send(err);
+			}
+		else{
+	  req.body.subject_id = data[0].subject_id; 
+	req.body.dueDate = "9999-12-31 23:59:59";
+
+	  Task.addTask(req.body, function(err,rows)
+		  {
+			  if(err)
+			  {
+				  res.send(err);
+			  }
+			  else
+			  {
+
+                Subject.getSubjectsAndAssignmentByUserId(req.body.user_id, function(err, rows){
 
                 if(err)
-            {
+            	{
                     res.send("failed 2");
-            }
-            else
-            {
+            	}
+            	else
+            	{
                     res.send(getAll(rows));
-            }
+            	}
 
-    });
+    		});
+		}//end add task else
+   	 });
+	}
+  });
 	}
     });
 });
