@@ -28,10 +28,15 @@ function getAll(rows) {
                 }
 		for(var i = 0; i < rows.length; i++)
                 {
+			console.log(rows[i].assignments[0].dueDate);
                         if(rows[i].assignments[0].name == null)
                         {
                                 rows[i].assignments.length = 0;
                         }
+			if(rows[i].assignments[0].dueDate === "9999-12-31 23:59:59.000000")
+			{       console.log(rows[i].assignments);
+				rows[i].assignments.pop();
+			}
                 }
                 return rows;
                 //res.send("NATASHA");
