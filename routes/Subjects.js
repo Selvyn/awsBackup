@@ -81,7 +81,9 @@ router.post('/updateSubject', function(req, res, next){
 		res.send("Error: No updated rows");
 	    }
 	    else
-    	    {
+    	    { 
+		    res.json(req.body);
+		    /*
 	    	Subject.getSubjectById(req.body.subject_id, function(err, rows){
 
             		if(err)
@@ -93,7 +95,7 @@ router.post('/updateSubject', function(req, res, next){
                     		res.send(getAll(rows));
            		}
 
-    		});
+    		});*/
 	    }
 	}
     });

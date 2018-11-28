@@ -12,11 +12,10 @@ router.post('/addType',function(req,res,next){
     Type.addType(req.body,function(err,rows){
         console.log(req.body);
 	    if(err){
-		    console.log(err);
             res.json(err);
         }
         else{
-            res.json(rows);
+            res.json(req.body);
         }
     });
 
@@ -50,7 +49,7 @@ router.post('/updateType',function(req,res,next){
             res.json(err);
         }
         else{
-            res.json(rows);
+            res.json(req.body);
         }
     });
 

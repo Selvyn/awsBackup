@@ -10,7 +10,7 @@ var Task={
     },
 	addTask:function(Task,callback){
     	return db.query("INSERT INTO Task(name, description, type, dueDate, subject_id) VALUES(?,?,?,?,?)",
-		[Task.name,Task.description,Task.type,Task.dueDate,Task.subject_id],callback);
+		[Task.name,Task.description,Task.type_id,Task.dueDate,Task.subject_id],callback);
     },
 
     getTasksBySubjectId:function(id, callback){

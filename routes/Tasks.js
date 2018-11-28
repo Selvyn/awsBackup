@@ -56,6 +56,10 @@ function getAll(rows) {
                         {
                                 rows[i].assignments.length = 0;
                         }
+			if(rows[i].assignments[0].dueDate === "9999-12-31 23:59:59.000000")
+			{       //console.log(rows[i].assignments);
+				rows[i].assignments.pop();
+			}
                 }
                 return rows;
                 //res.send("NATASHA");
@@ -68,7 +72,8 @@ router.post('/addTask',function(req,res,next){
 			res.send(err);
 		}
 		else{
-			//res.send("success");
+			res.json(req.body);
+			/*
 			Subject.getSubjectsAndAssignmentByUserId(req.body.user_id, function(err, rows){
 
                   	 if(err)
@@ -77,10 +82,11 @@ router.post('/addTask',function(req,res,next){
                   	 }
                   	 else
                   	 {
+				
                             res.json(getAll(rows));
                   	 }
 
-                	});
+                	});*/
 		}
 	});
 });
