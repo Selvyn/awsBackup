@@ -28,13 +28,13 @@ function getAll(rows) {
                 }
 		for(var i = 0; i < rows.length; i++)
                 {
-			console.log(rows[i].assignments[0].dueDate);
+			//console.log(rows[i].assignments[0].dueDate);
                         if(rows[i].assignments[0].name == null)
                         {
                                 rows[i].assignments.length = 0;
                         }
 			if(rows[i].assignments[0].dueDate === "9999-12-31 23:59:59.000000")
-			{       console.log(rows[i].assignments);
+			{       //console.log(rows[i].assignments);
 				rows[i].assignments.pop();
 			}
                 }
@@ -48,7 +48,7 @@ router.get('/getAll/:id',function(req,res,next){
 
 		if(err)
 	    {
-		    res.send("failed");
+		    res.send(err);
 	    }
 	    else
 	    {
@@ -70,25 +70,26 @@ router.get('/getAll/:id',function(req,res,next){
     });*/
 });
 
-router.post('/updateSubjectName', function(req, res, next){
+router.post('/updateSubject', function(req, res, next){
     Subject.updateSubjectName(req.body, function(err,rows){
 	if(err){
-	    res.send("failed");
+	    res.send(err);
 	}
 	else{
+	    console.log(rows.changedRows );
 	    if(rows.changedRows <= 0){
-		res.send("failed");
+		res.send("Error: No updated rows");
 	    }
 	    else
     	    {
-	    	Subject.getSubjectsAndAssignmentByUserId(req.body.user_id, function(err, rows){
+	    	Subject.getSubjectById(req.body.subject_id, function(err, rows){
 
             		if(err)
             		{
-                    		res.send("failed");
+                    		res.send(err);
             		}
             		else
-            		{
+            		{	console.log(rows);
                     		res.send(getAll(rows));
            		}
 
@@ -128,7 +129,7 @@ router.post('/addSubject',function(req,res,next){
 
                 if(err)
             	{
-                    res.send("failed 2");
+                    res.send(err);
             	}
             	else
             	{
@@ -148,11 +149,11 @@ router.delete('/deleteSubject/:id',function(req,res,next){
     Subject.deleteSubject(req.params.id,function(err,rows){
 	    //console.log(rows);
         if(err){
-            res.send("failed");
+            res.send(err);
         }
         else{
 	    if(rows.affectedRows <= 0){	
-                res.send("failed");
+                res.send("Error:No Updatred rows");
 	    }
 	    else{
 		res.send("success");

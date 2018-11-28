@@ -12,7 +12,7 @@ router.get('/getName/:id',function(req,res,next){
             res.json(rows);
         }
         else{
-            res.send("failed");
+            res.send(err);
         }
     });
     
@@ -26,7 +26,7 @@ router.post('/login',function(req,res){
 			return res.send(userId);
 		}
 		else{
-			return res.send("failed");
+			return res.send(err);
 		}
 	});
 }); 
@@ -34,7 +34,7 @@ router.post('/login',function(req,res){
 router.post('/register',function(req,res,next){
     User.addUser(req.body,function(err,rows){
         if(err){
-            res.send("failed");
+            res.send(err);
         }
         else{
             res.send("success");//or return rows for 1 &amp;amp;amp; 0

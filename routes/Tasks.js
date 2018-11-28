@@ -61,10 +61,11 @@ function getAll(rows) {
                 //res.send("NATASHA");
 }
 
-router.post('/addA',function(req,res,next){
+
+router.post('/addTask',function(req,res,next){
 	Task.addTask(req.body,function(err,rows){
 		if(err){
-			res.send("failed");
+			res.send(err);
 		}
 		else{
 			//res.send("success");
@@ -72,7 +73,7 @@ router.post('/addA',function(req,res,next){
 
                   	 if(err)
                   	 {
-                            res.send("failed");
+                            res.send(err);
                   	 }
                   	 else
                   	 {
@@ -87,7 +88,7 @@ router.post('/addA',function(req,res,next){
 router.get('/viewCompletedTasks/:id', function(req, res, next){
 	Task.viewCompletedTasks(req.params.id, function(err, rows){
 		if(err){
-			res.send("failed");
+			res.send(err);
 		}
 		else{
 			res.json(rows);
@@ -95,14 +96,44 @@ router.get('/viewCompletedTasks/:id', function(req, res, next){
 	});
 });
 
-router.post('/updateA',function(req,res,next){
+router.post('/getIncomplete',function(req,res,next){
+        Task.updateTask(req.body,function(err,rows){
+                if(err){
+                        res.send(err);
+                }
+                else{
+                    if(rows.affectedRows <= 0){
+                        res.send("Affected rows <=0");
+                    }
+                    else
+                    {
+                        Subject.getSubjectsAndAssignmentByUserId(req.body.user_id, function(err, rows){
+
+                         if(err)
+                         {
+                            res.send(err);
+                         }
+                         else
+                         {
+                            res.json(getIncomplete(rows));
+                         }
+
+                        });
+                    }
+                }
+        });
+});
+
+
+
+router.post('/updateTask',function(req,res,next){
 	Task.updateTask(req.body,function(err,rows){
 		if(err){
-			res.send("failed");
+			res.send(err);
 		}
 		else{
 		    if(rows.affectedRows <= 0){
-			res.send("failed");
+			res.send("Affected rows <=0");
 		    }
 		    else
 		    {
@@ -110,7 +141,7 @@ router.post('/updateA',function(req,res,next){
 
                          if(err)
                          {
-                            res.send("failed");
+                            res.send(err);
                          }
                          else
                          {
@@ -123,15 +154,15 @@ router.post('/updateA',function(req,res,next){
 	});
 });
 
-router.delete('/deleteTask/:id',function(req,res,next){
+router.post('/deleteTask',function(req,res,next){
     Task.deleteTask(req.params.id,function(err,rows){
         if(err){
 		console.log(err);
-            res.send("failed");
+            res.send(err);
         }
         else{
 		if(rows.affectedRows <= 0){
-			res.send("failed");
+			res.send("Affected rows <=0");
 		}
 		else{
             	   	res.send("success");
@@ -143,11 +174,11 @@ router.delete('/deleteTask/:id',function(req,res,next){
 router.post('/setCompleted', function(req,res,next){
 	Task.setCompleted(req.body,function(err, rows){
 		if(err){
-			res.send("failed");
+			res.send(err);
 		}
 		else{
 			if(rows.affectedRows <= 0){
-				res.send("failed");
+				res.send("Affected rows <=0");
 			}
 			else{
 				res.send("success");

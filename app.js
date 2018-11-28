@@ -7,6 +7,7 @@ var cors = require('cors');
 var Tasks = require('./routes/Tasks');
 var RadarUsers = require('./routes/RadarUsers');
 var Subjects = require('./routes/Subjects');
+var Types = require('./routes/Types');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -18,6 +19,7 @@ app.use(cors());
 app.use('/Tasks',Tasks);
 app.use('/RadarUsers',RadarUsers);
 app.use('/Subjects',Subjects);
+app.use('/Types',Types);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 

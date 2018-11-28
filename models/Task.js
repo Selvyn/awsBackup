@@ -18,7 +18,7 @@ var Task={
     },	
 
     deleteTask:function(id,callback){
-    	return db.query("DELETE FROM Task WHERE task_id=?",[id],callback);
+    	return db.query("DELETE FROM Task WHERE task_id=?",[id.task_id],callback);
     },
     updateTask:function(Task,callback){
     	return db.query("UPDATE Task SET name=?,description=?, type=?, dueDate=?, progress=? where task_id=?",[Task.name,Task.description,Task.type,Task.dueDate, Task.progress,Task.task_id],callback);
@@ -32,6 +32,10 @@ var Task={
 
    viewCompletedTasks:function(id, callback){
 	   return db.query("SELECT * FROM Task WHERE Task.subject_id IN (SELECT Subject.subject_id FROM Subject WHERE Subject.user_id = ?) AND Task.completed = 1", [id], callback);
+   },
+
+  viewCompletedTasks:function(Task, callback){
+           return db.query("SELECT * FROM Task WHERE Task.subject_id IN (SELECT Subject.subject_id FROM Subject WHERE Subject.user_id = ?) AND Task.completed = 0", [Task.user_id], callback);
    }
 
 };
