@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
 var User = require('../models/User');
+var Type = require('../models/Type');
 router.use(bodyParser.urlencoded({
   extended: true
 }));
@@ -49,6 +50,18 @@ router.post('/register',function(req,res,next){
             res.send(err);
         }
         else{
+		var defType = new Object();
+		defType.user_id = rows.insertId;
+		defType.name = "Others";
+		defType.color = "#ffffff";
+		Type.addType(defType,function(err, rows){
+			if(err){
+				res.send(err);
+			}
+			else{
+			}
+		});
+
             res.send("success");//or return rows for 1 &amp;amp;amp; 0
         }
     });

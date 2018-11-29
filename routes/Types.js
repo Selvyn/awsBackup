@@ -15,6 +15,7 @@ router.post('/addType',function(req,res,next){
             res.json(err);
         }
         else{
+	    req.body.type_id=rows.insertId;
             res.json(req.body);
         }
     });

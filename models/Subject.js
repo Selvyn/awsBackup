@@ -26,6 +26,10 @@ var Subject={
     },
     updateSubjectName:function(Subject,callback){
     	return db.query("UPDATE Subject SET name=?, description=?, color=?, primary_type=? WHERE subject_id=?",[Subject.name, Subject.description, Subject.color, Subject.default_type_id, Subject.subject_id], callback);
-    } 
+    }, 
+    getSubjectAssignment:function(Subject,callback){
+	return db.query("SELECT * FROM Task WHERE subject_id=?",[Subject.subject_id],callback);
+    }
+
 };
 module.exports=Subject;
