@@ -1,7 +1,10 @@
 var db=require('../dbconnection'); //reference of dbconnection.js
  
 var Task={
- 
+
+	getTaskByName:function(object, callback){
+		return db.query("SELECT * from Task where name=? AND subject_id=?", [object.name, object.subject_id],callback);
+	},
     getAllTasks:function(callback){ 
         return db.query("SELECT * FROM Task",callback);
     },
@@ -26,12 +29,12 @@ var Task={
     setCompleted:function(Task,callback){
 	    return db.query("UPDATE Task SET completed=1,date_complete=NOW() WHERE task_id=?",[Task.task_id],callback);
     },
-    getOverdueTasks:function(id, callback){
-	return db.query("SELECT * FROM Task WHERE Task.subject_id IN (SELECT Subject.subject_id FROM Subject WHERE Subject.user_id = ?) AND Task.dueDate < NOW()", [id], callback);
+    getOverdue:function(id, callback){
+	return db.query("SELECT * FROM Task WHERE Task.subject_id IN (SELECT Subject.subject_id FROM Subject WHERE Subject.user_id = ?) AND Task.dueDate < ? AND Task.completed=0", [id.user_id, id.current_time], callback);
     },
 
-   viewCompletedTasks:function(id, callback){
-	   return db.query("SELECT * FROM Task WHERE Task.subject_id IN (SELECT Subject.subject_id FROM Subject WHERE Subject.user_id = ?) AND Task.completed = 1", [id], callback);
+   getComplete:function(id, callback){
+	   return db.query("SELECT * FROM Task WHERE Task.subject_id IN (SELECT Subject.subject_id FROM Subject WHERE Subject.user_id = ?) AND Task.completed = 1", [id.user_id], callback);
    },
 
   viewCompletedTasks:function(Task, callback){

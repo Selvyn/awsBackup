@@ -18,6 +18,18 @@ router.get('/getName/:id',function(req,res,next){
     
  });
 
+router.post('/getUserEmail', function(req,res){
+	User.getEmail(req.body, function(err,rows){
+		if(err)
+		{
+			res.send(err);
+		}
+		else {
+			res.json(rows);
+		}
+	});
+});
+
 router.post('/login',function(req,res){
 	var user = req.body.user;
 	var pass = req.body.pass;

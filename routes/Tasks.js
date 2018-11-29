@@ -22,8 +22,8 @@ router.get('/getTasksBySubjectId/:id',function(req,res,next){
 
  });
 
-router.get('/getOverdueTasks/:id', function(req, res, next){
-    Task.getOverdueTasks(req.params.id, function(err, rows){
+router.post('/getOverdue', function(req, res, next){
+    Task.getOverdue(req.body, function(err, rows){
 	if(err){
 	    res.json(err);
 	}
@@ -63,6 +63,34 @@ function getAll(rows) {
                 }
                 return rows;
                 //res.send("NATASHA");
+} 
+
+function getIncomplete(rows){
+	for(var i =0; i<rows.length; i++){
+		rows[i].assignments = JSON.parse(rows[i].assignments);
+	}
+	//console.log(rows);
+	console.log(rows.length);
+	for(var i = 0; i<rows.length; i++)
+	{
+		console.log("pass here");
+		var a = []; 
+		console.log(rows[i].assignments);
+		//console.log(rows[0]);
+		//console.log(rows[0][0]);
+		for(var j = 0; j < rows[i].assignments.length; j++)
+		{
+
+			if(rows[i].assignments[j].progress == 0 && rows[i].assignments[j].dueDate != "9999-12-31 23:59:59.000000") {
+				a.push(rows[i].assignments[j]);
+			}
+		}
+		rows[i].assignment = a;
+		console.log(i);
+
+	}
+	//console.log(rows);
+	return rows;
 }
 
 
@@ -71,28 +99,15 @@ router.post('/addTask',function(req,res,next){
 		if(err){
 			res.send(err);
 		}
-		else{
+		else{	
+			req.body.task_id = rows.insertId;
 			res.json(req.body);
-			/*
-			Subject.getSubjectsAndAssignmentByUserId(req.body.user_id, function(err, rows){
-
-                  	 if(err)
-                  	 {
-                            res.send(err);
-                  	 }
-                  	 else
-                  	 {
-				
-                            res.json(getAll(rows));
-                  	 }
-
-                	});*/
 		}
 	});
 });
 
-router.get('/viewCompletedTasks/:id', function(req, res, next){
-	Task.viewCompletedTasks(req.params.id, function(err, rows){
+router.post('/getComplete', function(req, res, next){
+	Task.getComplete(req.body, function(err, rows){
 		if(err){
 			res.send(err);
 		}
@@ -103,16 +118,17 @@ router.get('/viewCompletedTasks/:id', function(req, res, next){
 });
 
 router.post('/getIncomplete',function(req,res,next){
-        Task.updateTask(req.body,function(err,rows){
-                if(err){
-                        res.send(err);
-                }
-                else{
-                    if(rows.affectedRows <= 0){
-                        res.send("Affected rows <=0");
-                    }
-                    else
-                    {
+       // Task.updateTask(req.body,function(err,rows){
+       //         if(err){
+       //                 res.send(err);
+       //         }
+       //         else{
+       //             if(rows.affectedRows <= 0){
+       //                 res.send("Affected rows <=0");
+       //             }
+       //             else
+       //             {
+	console.log(req.body.user_id);
                         Subject.getSubjectsAndAssignmentByUserId(req.body.user_id, function(err, rows){
 
                          if(err)
@@ -121,12 +137,13 @@ router.post('/getIncomplete',function(req,res,next){
                          }
                          else
                          {
+				console.log(rows);
                             res.json(getIncomplete(rows));
                          }
 
-                        });
-                    }
-                }
+       //                 });
+       //             }
+       //         }
         });
 });
 
@@ -151,7 +168,7 @@ router.post('/updateTask',function(req,res,next){
                          }
                          else
                          {
-                            res.json(getAll(rows));
+                            res.json(getIncomplete(rows));
                          }
 
                         });		
@@ -161,7 +178,7 @@ router.post('/updateTask',function(req,res,next){
 });
 
 router.post('/deleteTask',function(req,res,next){
-    Task.deleteTask(req.params.id,function(err,rows){
+    Task.deleteTask(req.body,function(err,rows){
         if(err){
 		console.log(err);
             res.send(err);
@@ -177,7 +194,7 @@ router.post('/deleteTask',function(req,res,next){
     });
 });
 
-router.post('/setCompleted', function(req,res,next){
+router.post('/completeTask', function(req,res,next){
 	Task.setCompleted(req.body,function(err, rows){
 		if(err){
 			res.send(err);

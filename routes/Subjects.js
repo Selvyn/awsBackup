@@ -38,6 +38,7 @@ function getAll(rows) {
 				rows[i].assignments.pop();
 			}
                 }
+		
                 return rows;
                 //res.send("NATASHA");
 }
@@ -101,7 +102,38 @@ router.post('/updateSubject', function(req, res, next){
     });
 
 });
-	
+
+router.post('/addSubject', function(req,res,next){
+	Subject.addSubject(req.body,function(err,rows){
+		if(err){
+			res.send(err);
+		}
+		else{
+			var data = req.body;
+			Subject.getSubjectsByUserId(req.body.name,function(err,subject_id){
+				if(err){
+					res.send(err);
+				}
+				else{
+					data.subject_id = subject_id[0].subject_id;
+					data.assignments = [];
+					Task.addTask(req.body, function(err, rows){
+						if(err){
+							res.send(err);
+						}
+						else{
+							//res.send("success")
+						}
+					});
+					res.json(data);
+				}
+			});
+		}
+	});
+});
+
+
+/*
 router.post('/addSubject',function(req,res,next){
     Subject.addSubject(req.body,function(err,rows){
         if(err){
@@ -127,7 +159,7 @@ router.post('/addSubject',function(req,res,next){
 			  else
 			  {
 
-                Subject.getSubjectsAndAssignmentByUserId(req.body.user_id, function(err, rows){
+               /* Subject.getSubjectsAndAssignmentByUserId(req.body.user_id, function(err, rows){
 
                 if(err)
             	{
@@ -146,16 +178,16 @@ router.post('/addSubject',function(req,res,next){
 	}
     });
 });
-
-router.delete('/deleteSubject/:id',function(req,res,next){
-    Subject.deleteSubject(req.params.id,function(err,rows){
+*/
+router.post('/deleteSubject',function(req,res,next){
+    Subject.deleteSubject(req.body,function(err,rows){
 	    //console.log(rows);
         if(err){
             res.send(err);
         }
         else{
 	    if(rows.affectedRows <= 0){	
-                res.send("Error:No Updatred rows");
+                res.send("Error:No Updated rows");
 	    }
 	    else{
 		res.send("success");

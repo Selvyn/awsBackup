@@ -22,7 +22,7 @@ var Subject={
 		[Subject.name, Subject.color, Subject.description, Subject.primary_type, Subject.user_id], callback);
     },
     deleteSubject:function(id,callback){
-    	return db.query("DELETE FROM Subject WHERE subject_id=?",[id],callback);
+    	return db.query("DELETE FROM Subject WHERE subject_id=?",[id.subject_id],callback);
     },
     updateSubjectName:function(Subject,callback){
     	return db.query("UPDATE Subject SET name=?, description=?, color=?, primary_type=? WHERE subject_id=?",[Subject.name, Subject.description, Subject.color, Subject.default_type_id, Subject.subject_id], callback);

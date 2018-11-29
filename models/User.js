@@ -20,6 +20,9 @@ var User={
 	
 	authLogin:function(user, pass, callback){
 		return db.query("SELECT user_id from User WHERE email=? AND password=?",[user, pass], callback);
+	},
+	getEmail:function(user,callback){
+		return db.query("SELECT email from User WHERE user_id=?",[user.user_id], callback);
 	}
 };
 module.exports=User;
