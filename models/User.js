@@ -8,6 +8,11 @@ var User={
     getNameById:function(id,callback){
     	return db.query("SELECT name FROM User WHERE user_id=?",[id],callback);
     },
+    // new method here
+    getUserByEmail:function(email,callback){
+        return db.query("SELECT * FROM User WHERE email=?",[email],callback);
+    },
+    // new method ends
     addUser:function(User,callback){
     	return db.query("INSERT INTO User(`name`,`email`,`password`) VALUES(?,?,?)",[User.name,User.email,User.pass],callback);
     },
@@ -17,7 +22,6 @@ var User={
     updateUser:function(id,User,callback){
     	return db.query("UPDATE User SET name=?,email=?,password=? WHERE user_id=?",[User.Title,User.Status,id],callback);
     },
-	
 	authLogin:function(user, pass, callback){
 		return db.query("SELECT user_id from User WHERE email=? AND password=?",[user, pass], callback);
 	},
