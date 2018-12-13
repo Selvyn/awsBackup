@@ -24,7 +24,7 @@ var Task={
     	return db.query("DELETE FROM Task WHERE task_id=?",[id.task_id],callback);
     },
     updateTask:function(Task,callback){
-    	return db.query("UPDATE Task SET name=?,description=?, type=?, dueDate=?, progress=? where task_id=?",[Task.name,Task.description,Task.type,Task.dueDate, Task.progress,Task.task_id],callback);
+    	return db.query("UPDATE Task SET name=?,description=?, type=?, dueDate=?, progress=? where task_id=?",[Task.name,Task.description,Task.type_id,Task.dueDate, Task.progress,Task.task_id],callback);
     },
     setCompleted:function(Task,callback){
 	    return db.query("UPDATE Task SET completed=1,date_complete=NOW() WHERE task_id=?",[Task.task_id],callback);

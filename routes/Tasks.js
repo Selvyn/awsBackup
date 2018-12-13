@@ -115,14 +115,8 @@ router.post('/updateTask',function(req,res,next){
 			res.send(err);
 		}
 		else{
-		    if(rows.affectedRows <= 0){
-			res.send("Affected rows <=0");
-		    }
-		    else
-		    {
 		       	console.log(rows);
 	 	        res.json(req.body);
-		    }
 		}
 	});
 });
