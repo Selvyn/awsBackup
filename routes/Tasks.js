@@ -95,7 +95,7 @@ router.post('/getComplete', function(req, res, next){
 });
 
 router.post('/getIncomplete',function(req,res,next){
-	console.log(req.body.user_id);
+//	console.log(req.body.user_id);
                         Subject.getSubjectsAndAssignmentByUserId(req.body.user_id, function(err, rows){
 
                          if(err)
@@ -115,7 +115,7 @@ router.post('/updateTask',function(req,res,next){
 			res.send(err);
 		}
 		else{
-		       	console.log(rows);
+		       //	console.log(rows);
 	 	        res.json(req.body);
 		}
 	});

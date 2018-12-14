@@ -10,7 +10,6 @@ router.use(bodyParser.json());
 
 router.post('/addType',function(req,res,next){
     Type.addType(req.body,function(err,rows){
-        console.log(req.body);
 	    if(err){
             res.json(err);
         }
