@@ -4,15 +4,21 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
+var bodyParser = require('body-parser');
+
 var Tasks = require('./routes/Tasks');
 var RadarUsers = require('./routes/RadarUsers');
 var Subjects = require('./routes/Subjects');
 var Types = require('./routes/Types');
+var Repass = require('./routes/Repass');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
+
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 
 // view engine setup
 app.use(cors());
@@ -20,12 +26,13 @@ app.use('/Tasks',Tasks);
 app.use('/RadarUsers',RadarUsers);
 app.use('/Subjects',Subjects);
 app.use('/Types',Types);
+app.use('/Repass',Repass);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 

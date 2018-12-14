@@ -19,6 +19,9 @@ var User={
     deleteUser:function(id,callback){
     	return db.query("DELETE FROM User WHERE user_id=?",[id],callback);
     },
+    updatePassword:function(user,password,callback){
+        return db.query("UPDATE User SET password=? WHERE user_id=?",[password,user.user_id],callback(null,password,user));
+    },
     updateUser:function(id,User,callback){
     	return db.query("UPDATE User SET name=?,email=?,password=? WHERE user_id=?",[User.Title,User.Status,id],callback);
     },

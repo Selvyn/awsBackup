@@ -7,6 +7,7 @@
     "test": "nyc mocha --exit"
   },
   "dependencies": {
+    "async": "^2.6.1",
     "body-parser": "^1.18.3",
     "connect": "^3.6.6",
     "chai": "^4.2.0",
@@ -20,6 +21,10 @@
     "mocha": "^5.2.0",
     "morgan": "~1.9.0",
     "mysql": "^2.16.0",
+<<<<<<< HEAD
     "nyc": "^13.1.0"
+=======
+    "nodemailer": "^4.7.0"
+>>>>>>> 904ac733da8d702c27293525aa12388cd0dfaf2e
   }
 }

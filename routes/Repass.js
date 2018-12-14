@@ -1,9 +1,10 @@
 var express = require('express');
 var router = express.Router();
-var Reset = require('../models/Reset');
+var User = require('../models/User');
 var nodemailer = require('nodemailer');
 var async = require('async');
 var crypto = require('crypto');
+var bodyParser = require('body-parser');
 
 router.post('/', function(req, res, next) {
 	async.waterfall([
@@ -16,7 +17,7 @@ router.post('/', function(req, res, next) {
 		function(token, done) {
 			//console.log(req);
 			// error, does get the parameter, but returns an undefined user
-			Reset.getUserByEmail(req.query.email, function(err, user) {
+			User.getUserByEmail(req.query.email, function(err, user) {
 				if(err){
 					res.json(err);
 				}
@@ -31,17 +32,17 @@ router.post('/', function(req, res, next) {
 					//console.log(user);
 					//user.resetPasswordToken = token;
 					//user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
-					console.log("step 1");
-					var expire = new Date(Date.now() + 3600000);
+					//console.log("step 1");
+					// var expire = new Date(Date.now() + 3600000);
 
 					//console.log(expire);
 					//console.log(user[0].user_id);
-					done(err, token, user, expire);
+					done(err, token, user);
 				}
 			});
 		},
-		function(token, user, expire, done) {
-			Reset.saveReset(user[0].user_id,user[0].email,token,expire, function(err, token, user){
+		function(token, user, done) {
+			User.updatePassword(user[0], token, function(err, token, user){
 				if(err){
 					res.json(err);
 				}
@@ -53,9 +54,9 @@ router.post('/', function(req, res, next) {
 		},
 		function(token, user, done) {
 
-			console.log("step 2");
-			console.log(token);
-			console.log(user);
+			//console.log("step 2");
+			//console.log(token);
+			//console.log(user);
 
 			var smtpTransport = nodemailer.createTransport({
 				service: 'Gmail',
@@ -69,12 +70,11 @@ router.post('/', function(req, res, next) {
 				from: 'jyoon1297@gmail.com',
 				subject: 'RadarHomework Password Reset',
 				text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-				'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-				'http://' + req.headers.host + '/Repass/reset/' + token + '\n\n' +
-				'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+				'Your password has been successfully updated to:\n\n' +
+				token + '\n\n'
 			};
 
-			console.log("step 3");
+			//console.log("step 3");
 
 			smtpTransport.sendMail(mailOptions, function(err) {
 				//req.flash('info', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
@@ -87,6 +87,53 @@ router.post('/', function(req, res, next) {
 	});
 });
 
+router.post('/reset/', function(req, res) {
+	async.waterfall([
+		function(done) {
+			//console.log(req.body);
+			// error, does get the parameter, but returns an undefined user
+			User.getUserByEmail(req.body.email, function(err, user) {
+				if(err){
+					res.json(err);
+				}
+				else{
+					//res.json(user);
+
+					if (user.length == 0) {
+						//req.flash('error', 'No account with that email address exists.');
+						//return res.redirect('/');
+						res.send("Error: no such account exists");
+					}
+					//console.log(user);
+					//user.resetPasswordToken = token;
+					//user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+					//console.log("step 1");
+					// var expire = new Date(Date.now() + 3600000);
+					var token = req.body.password;
+
+					//console.log(expire);
+					//console.log(user[0].user_id);
+					done(err, token, user);
+				}
+			});
+		},
+		function(token, user, done) {
+			User.updatePassword(user[0], token, function(err, token, user){
+				if(err){
+					res.json(err);
+				}
+				else {
+					done(err, token, user);
+				}
+			});
+			//console.log(token);
+		}],
+		function(err) {
+			if (err) return next(err);
+			res.redirect('/');});
+});
+
+/*
 router.get('/reset/:token', function(req, res) {
 	User.getReset(req.params.token, function(err, reset) {
 		if (reset.length == 0 || reset.reset_expire < Date.now) {
@@ -114,7 +161,6 @@ router.post('/reset/:token', function(req, res) {
 		Reset.updatePass(req.body.password,req.body.email);
 		Reset.removeReset(req.param.token);
 
-		/*
 		user.password = req.body.password;
 		userpass.reset_tolken = undefined;
 		userpass.reset_password = undefined;
@@ -124,7 +170,7 @@ router.post('/reset/:token', function(req, res) {
 			done(err, user);
 		  });
 		});
-		*/
+		
 		done(err, user);
 	});
 		},
@@ -153,4 +199,5 @@ router.post('/reset/:token', function(req, res) {
 			res.redirect('/');
 		});
 });
+*/
 module.exports=router;
